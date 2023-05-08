@@ -3,7 +3,7 @@ package br.com.ada.testeautomatizado.service;
 import br.com.ada.testeautomatizado.dto.VeiculoDTO;
 import br.com.ada.testeautomatizado.model.Veiculo;
 import br.com.ada.testeautomatizado.repository.VeiculoRepository;
-import br.com.ada.testeautomatizado.util.Response;
+import br.com.ada.testeautomatizado.dto.ResponseDTO;
 import br.com.ada.testeautomatizado.util.ValidacaoPlaca;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,9 +40,9 @@ class VeiculoServiceTest {
         VeiculoDTO veiculoDTO = veiculoDTO();
         doCallRealMethod().when(validacaoPlaca).isPlacaValida(veiculoDTO.getPlaca());
 
-        Response<VeiculoDTO> response = new Response<>("Sucesso", veiculoDTO);
+        ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Sucesso", veiculoDTO);
 
-        assertEquals(veiculoService.cadastrar(veiculoDTO), ResponseEntity.ok(response));
+        assertEquals(veiculoService.cadastrar(veiculoDTO), ResponseEntity.ok(responseDTO));
     }
 
 
@@ -53,10 +53,10 @@ class VeiculoServiceTest {
         veiculoDTO.setPlaca("XYZ4578");
         doCallRealMethod().when(validacaoPlaca).isPlacaValida(veiculoDTO.getPlaca());
 
-        Response<VeiculoDTO> response = new Response<>("Placa invalida!", null);
+        ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Placa invalida!", null);
 
         assertEquals(veiculoService.cadastrar(veiculoDTO),
-                ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response));
+                ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(responseDTO));
     }
 
     @Test
@@ -68,10 +68,10 @@ class VeiculoServiceTest {
 
         when(veiculoRepository.findByPlaca(veiculoDTO.getPlaca())).thenReturn(Optional.of(veiculo));
 
-        Response<Boolean> response = new Response<>("Sucesso", true);
+        ResponseDTO<Boolean> responseDTO = new ResponseDTO<>("Sucesso", true);
 
         assertEquals(veiculoService.deletarVeiculoPelaPlaca(veiculoDTO.getPlaca()),
-                ResponseEntity.ok(response));
+                ResponseEntity.ok(responseDTO));
 
 
     }
@@ -88,10 +88,10 @@ class VeiculoServiceTest {
 
         when(veiculoRepository.findByPlaca(placa)).thenReturn(optionalVeiculo);
 
-        Response<Boolean> response = new Response<>("Placa invalida!", null);
+        ResponseDTO<Boolean> responseDTO = new ResponseDTO<>("Placa invalida!", null);
 
         assertEquals(veiculoService.deletarVeiculoPelaPlaca(placa),
-                ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response));
+                ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(responseDTO));
 
     }
 
@@ -105,9 +105,9 @@ class VeiculoServiceTest {
         when(veiculoRepository.findByPlaca(anyString())).thenReturn(Optional.of(veiculoBD()));
         when(veiculoRepository.save(veiculoAtualizadoBD())).thenReturn(veiculoAtualizadoBD());
 
-        Response<VeiculoDTO> response = new Response<>("Sucesso", veiculoAtualizadoDTO());
+        ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Sucesso", veiculoAtualizadoDTO());
 
-        assertEquals(veiculoService.atualizar(veiculoDTO),ResponseEntity.ok(response));
+        assertEquals(veiculoService.atualizar(veiculoDTO),ResponseEntity.ok(responseDTO));
     }
 
     @Test
@@ -120,9 +120,9 @@ class VeiculoServiceTest {
 
         when(veiculoRepository.findByPlaca(anyString())).thenReturn(optionalVeiculo);
 
-        Response<VeiculoDTO> response = new Response<>("Placa invalida!", null);
+        ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Placa invalida!", null);
 
-        assertEquals(veiculoService.atualizar(veiculoDTO),ResponseEntity.status(HttpStatus.NO_CONTENT).body(response));
+        assertEquals(veiculoService.atualizar(veiculoDTO),ResponseEntity.status(HttpStatus.NO_CONTENT).body(responseDTO));
     }
 
 
@@ -132,12 +132,12 @@ class VeiculoServiceTest {
 
         when(veiculoRepository.findAll()).thenReturn(List.of(veiculoBD()));
 
-        Response<List<VeiculoDTO>> response = new Response<>("Sucesso", List.of(veiculoDTO()));
-        ResponseEntity<Response<List<VeiculoDTO>>> responseMetodoListarTodos = veiculoService.listarTodos();
+        ResponseDTO<List<VeiculoDTO>> responseDTO = new ResponseDTO<>("Sucesso", List.of(veiculoDTO()));
+        ResponseEntity<ResponseDTO<List<VeiculoDTO>>> responseMetodoListarTodos = veiculoService.listarTodos();
 
         assertEquals(responseMetodoListarTodos.getStatusCode(),HttpStatus.OK);
-        assertEquals(responseMetodoListarTodos.getBody().getMessage(),response.getMessage());
-        assertEquals(responseMetodoListarTodos.getBody().getDetail(),response.getDetail());
+        assertEquals(responseMetodoListarTodos.getBody().getMessage(), responseDTO.getMessage());
+        assertEquals(responseMetodoListarTodos.getBody().getDetail(), responseDTO.getDetail());
     }
 
     private static VeiculoDTO veiculoDTO(){

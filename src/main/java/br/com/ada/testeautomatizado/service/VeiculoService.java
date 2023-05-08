@@ -5,7 +5,7 @@ import br.com.ada.testeautomatizado.exception.PlacaInvalidaException;
 import br.com.ada.testeautomatizado.exception.VeiculoNaoEncontradoException;
 import br.com.ada.testeautomatizado.model.Veiculo;
 import br.com.ada.testeautomatizado.repository.VeiculoRepository;
-import br.com.ada.testeautomatizado.util.Response;
+import br.com.ada.testeautomatizado.dto.ResponseDTO;
 import br.com.ada.testeautomatizado.util.ValidacaoPlaca;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class VeiculoService {
     @Autowired
     private ValidacaoPlaca validacaoPlaca;
 
-    public ResponseEntity<Response<VeiculoDTO>> cadastrar(VeiculoDTO veiculoDTO) {
+    public ResponseEntity<ResponseDTO<VeiculoDTO>> cadastrar(VeiculoDTO veiculoDTO) {
 
         try {
             validacaoPlaca.isPlacaValida(veiculoDTO.getPlaca());
@@ -35,18 +35,18 @@ public class VeiculoService {
             Veiculo veiculo = criarVeiculo(veiculoDTO);
             veiculoRepository.save(veiculo);
 
-            Response<VeiculoDTO> response = new Response<>("Sucesso", criarVeiculoDTO(veiculo));
+            ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Sucesso", criarVeiculoDTO(veiculo));
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(responseDTO);
 
         } catch (PlacaInvalidaException e){
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body(new Response<>("Placa invalida!", null));
+                    .body(new ResponseDTO<>("Placa invalida!", null));
 
         }
     }
 
-    public ResponseEntity<Response<Boolean>> deletarVeiculoPelaPlaca(String placa) {
+    public ResponseEntity<ResponseDTO<Boolean>> deletarVeiculoPelaPlaca(String placa) {
 
         try{
 
@@ -55,17 +55,17 @@ public class VeiculoService {
             Veiculo veiculo = optionalVeiculo.get();
             veiculoRepository.delete(veiculo);
 
-            Response<Boolean> response = new Response<>("Sucesso", true);
-            return ResponseEntity.ok(response);
+            ResponseDTO<Boolean> responseDTO = new ResponseDTO<>("Sucesso", true);
+            return ResponseEntity.ok(responseDTO);
 
         }catch (VeiculoNaoEncontradoException e){
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body(new Response<>("Placa invalida!", null));
+                    .body(new ResponseDTO<>("Placa invalida!", null));
         }
 
     }
 
-    public ResponseEntity<Response<VeiculoDTO>> atualizar(VeiculoDTO veiculoDTO) {
+    public ResponseEntity<ResponseDTO<VeiculoDTO>> atualizar(VeiculoDTO veiculoDTO) {
         try{
 
             Optional<Veiculo> optionalVeiculo = buscarVeiculoPelaPlaca(veiculoDTO.getPlaca());
@@ -78,23 +78,23 @@ public class VeiculoService {
             veiculo.setDataFabricacao(veiculoDTO.getDataFabricacao());
             Veiculo veiculoSalvo = veiculoRepository.save(veiculo);
 
-            Response<VeiculoDTO> response = new Response<>("Sucesso", criarVeiculoDTO(veiculoSalvo));
-            return ResponseEntity.ok(response);
+            ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<>("Sucesso", criarVeiculoDTO(veiculoSalvo));
+            return ResponseEntity.ok(responseDTO);
 
         }catch (VeiculoNaoEncontradoException e){
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                    .body(new Response<>("Placa invalida!", null));
+                    .body(new ResponseDTO<>("Placa invalida!", null));
         }
     }
 
-    public ResponseEntity<Response<List<VeiculoDTO>>> listarTodos() {
+    public ResponseEntity<ResponseDTO<List<VeiculoDTO>>> listarTodos() {
         List<VeiculoDTO> veiculos = veiculoRepository.findAll().stream().map(this::criarVeiculoDTO)
                 .collect(Collectors.toList());
 
-        Response<List<VeiculoDTO>> response = new Response<>();
-        response.setMessage("Sucesso");
-        response.setDetail(veiculos);
-        return ResponseEntity.ok(response);
+        ResponseDTO<List<VeiculoDTO>> responseDTO = new ResponseDTO<>();
+        responseDTO.setMessage("Sucesso");
+        responseDTO.setDetail(veiculos);
+        return ResponseEntity.ok(responseDTO);
     }
 
     private Optional<Veiculo> buscarVeiculoPelaPlaca(String placa) {

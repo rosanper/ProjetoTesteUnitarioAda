@@ -5,7 +5,7 @@ import br.com.ada.testeautomatizado.dto.VeiculoDTO;
 import br.com.ada.testeautomatizado.model.Veiculo;
 import br.com.ada.testeautomatizado.repository.VeiculoRepository;
 import br.com.ada.testeautomatizado.service.VeiculoService;
-import br.com.ada.testeautomatizado.util.Response;
+import br.com.ada.testeautomatizado.dto.ResponseDTO;
 import br.com.ada.testeautomatizado.util.ValidacaoPlaca;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -66,8 +66,8 @@ class VeiculoControllerTest {
                 .andReturn();
 
         String resultActual = mvcResult.getResponse().getContentAsString();
-        Response<VeiculoDTO> response = Response.<VeiculoDTO>builder().message("Sucesso").detail(veiculoDTO()).build();
-        String responseString = mapper.writeValueAsString(response);
+        ResponseDTO<VeiculoDTO> responseDTO = ResponseDTO.<VeiculoDTO>builder().message("Sucesso").detail(veiculoDTO()).build();
+        String responseString = mapper.writeValueAsString(responseDTO);
 
         Assertions.assertEquals(responseString, resultActual);
 
@@ -92,7 +92,7 @@ class VeiculoControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        String responseExpected = mapper.writeValueAsString(new Response<VeiculoDTO>("Placa invalida!", null));
+        String responseExpected = mapper.writeValueAsString(new ResponseDTO<VeiculoDTO>("Placa invalida!", null));
 
         Assertions.assertEquals(responseExpected, mvcResult.getResponse().getContentAsString());
 
@@ -111,8 +111,8 @@ class VeiculoControllerTest {
                 .andDo(print())
                 .andReturn();
 
-        Response<Boolean> response = Response.<Boolean>builder().message("Sucesso").detail(Boolean.TRUE).build();
-        String responseExpected = mapper.writeValueAsString(response);
+        ResponseDTO<Boolean> responseDTO = ResponseDTO.<Boolean>builder().message("Sucesso").detail(Boolean.TRUE).build();
+        String responseExpected = mapper.writeValueAsString(responseDTO);
         Assertions.assertEquals(responseExpected, mvcResult.getResponse().getContentAsString());
 
     }
@@ -131,9 +131,9 @@ class VeiculoControllerTest {
                 .andReturn();
 
         List<VeiculoDTO> veiculoDTOS = List.of(veiculoDTO());
-        Response<List<VeiculoDTO>> response = Response.<List<VeiculoDTO>>builder().message("Sucesso").detail(veiculoDTOS).build();
+        ResponseDTO<List<VeiculoDTO>> responseDTO = ResponseDTO.<List<VeiculoDTO>>builder().message("Sucesso").detail(veiculoDTOS).build();
 
-        String responseExpected = mapper.writeValueAsString(response);
+        String responseExpected = mapper.writeValueAsString(responseDTO);
 
         Assertions.assertEquals(responseExpected, mvcResult.getResponse().getContentAsString());
 
@@ -160,8 +160,8 @@ class VeiculoControllerTest {
 
         String result = mvcResult.getResponse().getContentAsString();
 
-        Response<VeiculoDTO> response = new Response<VeiculoDTO>("Sucesso", veiculoAtualizadoDTO());
-        String resultExpect = mapper.writeValueAsString(response);
+        ResponseDTO<VeiculoDTO> responseDTO = new ResponseDTO<VeiculoDTO>("Sucesso", veiculoAtualizadoDTO());
+        String resultExpect = mapper.writeValueAsString(responseDTO);
 
         Assertions.assertEquals(resultExpect, result);
 
