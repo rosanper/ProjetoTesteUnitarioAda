@@ -1,4 +1,4 @@
-package br.com.ada.testeautomatizado.util;
+package br.com.ada.testeautomatizado.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -11,7 +11,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Response <T> {
+public class ResponseDTO<T> {
     String message;
     T detail;
 
@@ -19,8 +19,8 @@ public class Response <T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Response<?> response = (Response<?>) o;
-        return Objects.equals(message, response.message) && Objects.equals(detail, response.detail);
+        ResponseDTO<?> responseDTO = (ResponseDTO<?>) o;
+        return Objects.equals(message, responseDTO.message) && Objects.equals(detail, responseDTO.detail);
     }
 
     @Override
