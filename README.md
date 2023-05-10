@@ -4,6 +4,13 @@ Projeto final do módulo de Teste Unitário no qual é feito um CRUD utilizando 
 
 Este aplicativo foi feito a partir do código fornecido pelo professor do curso através do repositório: https://github.com/alexsaspbr/projeto-final
 
+**Equipe:**
+
+- [João Ortega](https://github.com/joaoortegabr)
+- [Kennethy Valerio](https://github.com/Kennethymov)
+- [Marcos Torres]()
+- [Rodrigo Santana](https://github.com/rosanper)
+
 ## Requisitos do projeto
 
 - Criar um CRUD com a entidade Veiculo.class, aplicando a técnica do TDD (Test Driven Development) com base nos testes disponibilizados;
